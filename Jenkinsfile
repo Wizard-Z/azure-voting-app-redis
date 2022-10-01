@@ -59,13 +59,23 @@ pipeline {
             }
         }
 
-        stage ('Run Trivy Scan') {
-            steps {
-                sh '''
-                trivy image sourabhhbar/jenkins-azure-demo-app
-                '''
-            }
+        stage ("Container Scanning") {
+            parallel {
+                stage ("Run Anchor") {
+                    steps {
+                        writeFile file: 'anchore_images', text: 'sourabhhbar/jenkins-azure-demo-app'
+                        anchore name: 'anchore_images' bailOnFail: false, bailOnPluginFail: false 
+                    }
 
+                }
+                stage ('Run Trivy Scan') {
+                    steps {
+                        sh '''
+                        trivy image sourabhhbar/jenkins-azure-demo-app
+                        '''
+                    }
+                }
+            }
         }
     }
 }
