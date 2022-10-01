@@ -59,5 +59,14 @@ pipeline {
                 }
             }
         }
+
+        stage ('Run Trivy Scan') {
+            steps {
+                sh '''
+                trivy image sourabhhbar/jenkins-azure-demo-app
+                '''
+            }
+
+        }
     }
 }
