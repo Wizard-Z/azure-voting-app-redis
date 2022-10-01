@@ -64,7 +64,7 @@ pipeline {
                 stage ("Run Anchor") {
                     steps {
                         writeFile file: 'anchore_images', text: 'sourabhhbar/jenkins-azure-demo-app'
-                        anchore name: 'anchore_images' bailOnFail: false, bailOnPluginFail: false 
+                        anchore name: 'anchore_images', bailOnFail: false, bailOnPluginFail: false 
                     }
 
                 }
