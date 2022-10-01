@@ -12,9 +12,10 @@ pipeline {
                 sh '''
                 cd azure-vote
                 docker images -a
-                docker build -t jenkins-azure-demo-app .
-                docker images -a
                 '''
+                script {
+                    def image = docker.build("sourabhhbar/jenkins-azure-demo-app:latest", "./azure-vote")
+                }
             }
         }    
         // stage('Start test app') {
@@ -41,14 +42,12 @@ pipeline {
         stage ('Push image to Docker Hub') {
             steps {
                 echo "Workspace is $WORKSPACE"
-                dir("$WORKSPACE/azure-vote"){
                     script {
                         docker.withRegistry('https://index.docker.io/v1/', 'DockerHub') {
-                        def image = docker.build('sourabhhbar/jenkins-azure-demo-app:latest')
+                        def image = docker.build("sourabhhbar/jenkins-azure-demo-app:latest", "./azure-vote")
                         image.push()
                         }
                     }
-                }
             }
             post {
                 success {
