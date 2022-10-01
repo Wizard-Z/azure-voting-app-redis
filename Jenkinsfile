@@ -17,5 +17,26 @@ pipeline {
                 '''
             }
         }    
+        stage('Start test app') {
+            steps {
+                sh '''
+                docker-compose up -d 
+                '''
+
+            }
+            post {
+                success {
+                    echo 'App started successfully :)'
+                }
+                failure {
+                    echo 'App failed :('
+                }
+            }
+        }
+        stage( 'Stop test app') {
+            steps {
+                sh 'docker-compose down'
+            }
+        }
     }
 }
